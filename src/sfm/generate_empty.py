@@ -97,5 +97,6 @@ def generate_model(img_lists, empty_dir, do_ba=False):
     logging.info(f'Writing the COLMAP model to {empty_dir}')
     Path(empty_dir).mkdir(exist_ok=True, parents=True)
     write_model(*model, path=str(empty_dir), ext='.bin')
+    write_model(*model, path=str(empty_dir), ext='.txt')
     logging.info('Finishing writing model.')
     

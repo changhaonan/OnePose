@@ -42,7 +42,8 @@ def covis_from_pose(img_lists, covis_pairs_out, num_matched, max_rotation, do_ba
     dist, dR, seqs_ids = get_pairswise_distances(pose_lists)
 
     min_rotation = 10
-    valid = dR > min_rotation
+    max_rotation = 90
+    valid = np.logical_and(dR > min_rotation, dR < max_rotation)
     np.fill_diagonal(valid, False)
     dist = np.where(valid, dist, np.inf)
 

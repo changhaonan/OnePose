@@ -92,6 +92,8 @@ def sfm(cfg):
         for sub_dir in sub_dirs:
             seq_dir = osp.join(root_dir, sub_dir)
             img_lists += glob.glob(str(Path(seq_dir)) + '/color/*.png', recursive=True)
+        # Sorted img_lists:
+        img_lists = sorted(img_lists, key=lambda x: int(x.split('/')[-1].split('.')[0]))
 
         down_img_lists = []
         for img_file in img_lists:

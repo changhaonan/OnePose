@@ -49,7 +49,7 @@ def spp(img_lists, feature_out, cfg):
 
         pred = {k: v[0].cpu().numpy() for k, v in pred.items()}
         pred['image_size'] = data['size'][0].numpy()
-        
+
         grp = feature_file.create_group(data['path'][0])
         for k, v in pred.items():
             grp.create_dataset(k, data=v)

@@ -109,11 +109,12 @@ hydra:
   overrides:
     hydra: []
     task:
-    - +preprocess=sfm_spp_spg_custom.yaml
-    - redo=True
+    - +experiment=test_GATsSPG_custom.yaml
+    - object_detect_mode=feature_matching
+    - save_wis3d=True
   job:
-    name: run
-    override_dirname: +preprocess=sfm_spp_spg_custom.yaml,redo=True
+    name: inference
+    override_dirname: +experiment=test_GATsSPG_custom.yaml,object_detect_mode=feature_matching,save_wis3d=True
     id: ???
     num: ???
     config_name: config.yaml
@@ -138,7 +139,7 @@ hydra:
       schema: structured
       provider: schema
     choices:
-      preprocess: sfm_spp_spg_custom.yaml
+      experiment: test_GATsSPG_custom.yaml
       logger: null
       callbacks: null
       datamodule: null
