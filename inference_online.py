@@ -175,7 +175,7 @@ class OnePoseInference:
             vis_width = int(image_vis.shape[1] * vis_heght / image_vis.shape[0])
             image_vis = cv2.resize(image_vis, (vis_width, vis_heght))
             cv2.imshow('frame', image_vis)
-            cv2.waitKey(0)
+            cv2.waitKey(15)
 
 
 @hydra.main(config_path='configs/', config_name='config.yaml')
@@ -205,7 +205,7 @@ def main(cfg):
             if ret:
                 one_pose_inference.inference(cfg, frame)
                 cv2.imshow('frame', frame)
-                cv2.waitKey(0)
+                cv2.waitKey(15)
 
 
 if __name__ == "__main__":

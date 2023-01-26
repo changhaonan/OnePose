@@ -432,6 +432,7 @@ def save_demo_image(pose_pred, K, image_path, box3d_path, draw_box=True, save_pa
         cv2.imwrite(save_path, image_full)
     return image_full
 
+
 def dump_wis3d(idx, cfg, data_dir, image0, image1, image_full,
                kpts2d, kpts2d_reproj, confidence, inliers):
     """ Visualize by wis3d """
@@ -468,6 +469,7 @@ def dump_wis3d(idx, cfg, data_dir, image0, image1, image_full,
                                        name='matches')
     image_full_pil = Image.fromarray(cv2.cvtColor(image_full, cv2.COLOR_BGR2RGB))
     wis3d.add_image(image_full_pil, name='results')
+
 
 def make_video(image_path, output_video_path):
     # Generate video:

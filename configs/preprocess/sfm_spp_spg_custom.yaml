@@ -2,7 +2,7 @@
 
 type: sfm
 work_dir: ${hydra:runtime.cwd}
-redo: True
+redo: False
 
 scan_data_dir: /home/robot-learning/Projects/ScenePose/data/
 
