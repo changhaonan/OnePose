@@ -186,14 +186,15 @@ def main(cfg):
         data_dirs = [data_dirs]
         sfm_model_dirs = [sfm_model_dirs]
     # get the first one
-    data_dir = os.path.join(data_dirs[0].split(" ")[0], data_dirs[0].split(" ")[1])
+    sfm_data_dir = os.path.join(data_dirs[0].split(" ")[0], data_dirs[0].split(" ")[1])
     sfm_model_dir = sfm_model_dirs[0]
+    test_data_dir = os.path.join(data_dirs[0].split(" ")[0], data_dirs[0].split(" ")[2])
     # init one pose inference
-    one_pose_inference = OnePoseInference(cfg, data_dir, sfm_model_dir) 
+    one_pose_inference = OnePoseInference(cfg, sfm_data_dir, sfm_model_dir) 
 
     vide_mode = "video"  # "video" or "web_camera"
     if vide_mode == "video":
-        cap = cv2.VideoCapture("/home/robot-learning/Projects/ScenePose/data/cracker_box/cracker_box_4/video.MOV")
+        cap = cv2.VideoCapture(f"{test_data_dir}/video.MOV")
         while True:
             ret, frame = cap.read()
             if ret:

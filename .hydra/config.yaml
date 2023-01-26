@@ -20,9 +20,9 @@ scan_data_dir: /home/robot-learning/Projects/ScenePose/data
 sfm_model_dir: ${data_dir}/sfm_model
 input:
   data_dirs:
-  - ${scan_data_dir}/cracker_box cracker_box_3
+  - ${scan_data_dir}/kcup kcup_1 kcup_2
   sfm_model_dirs:
-  - ${sfm_model_dir}/cracker_box
+  - ${sfm_model_dir}/kcup
 output:
   vis_dir: ${work_dir}/runs/vis/GATsSPG
   eval_dir: ${work_dir}/runs/eval/GATsSPG

@@ -167,7 +167,11 @@ def postprocess(cfg, img_lists, root_dir, outputs_dir_root):
     points_model_path = osp.join(model_path, 'points3D.bin')
     points3D_colmap = read_write_model.read_points3d_binary(points_model_path)
     points3D_o3d = points_colmap_to_o3d(points3D_colmap)
-    bbox_o3d = o3d.geometry.OrientedBoundingBox.create_from_points(points3D_o3d.points)
+    cl, ind = points3D_o3d.remove_statistical_outlier(nb_neighbors=20, std_ratio=2.0)
+    # Run DBSCAN to filter noisy points
+    
+    bbox_o3d = o3d.geometry.OrientedBoundingBox.create_from_points(cl.points)
+    bbox_o3d.color = (1, 0, 0)
     bbox_corners = bbox_o3d.get_box_points()
     bbox_corners = bbox_o3d_to_onepose(np.asarray(bbox_corners))  # Convert to onepose format
     np.savetxt(bbox_path, bbox_corners)
