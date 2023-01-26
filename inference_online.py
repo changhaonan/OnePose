@@ -88,7 +88,6 @@ def pack_data(avg_descriptors3d, clt_descriptors, keypoints3d, detection, image_
         'descriptors2d_db': clt_descriptors[None].cuda(), # [1, dim, n2*num_leaf]
         'image_size': image_size
     }
-
     return inp_data
 
 
@@ -137,8 +136,8 @@ class OnePoseInference:
     @torch.no_grad()
     def inference(self, cfg, image):
         # Normalize image:
-        image = cv2.cvtColor(image, cv2.COLOR_BGRA2GRAY)
-        inp = transforms.ToTensor()(image).cuda()[None]
+        image_gray = cv2.cvtColor(image, cv2.COLOR_BGRA2GRAY)
+        inp = transforms.ToTensor()(image_gray).cuda()[None]
         intrin_path = self.paths["intrin_full_path"]
         K_crop = load_intrinsic(intrin_path)
         image_size = inp.shape[-2:]
@@ -166,14 +165,17 @@ class OnePoseInference:
             poses = [pose_pred_homo]
             box3d_path = path_utils.get_3d_box_path(self.paths['data_root'])
             intrin_full_path = path_utils.get_intrin_full_path(self.paths['data_dir'])
-
+            # visualize bbox
             image_vis = vis_utils.vis_reproj_image(image, poses, box3d_path, intrin_full_path, colors=['y'])
+            # visualize keypoints
+            image_vis = vis_utils.vis_keypoints(image_vis, kpts2d[valid], color='g')
+            image_vis = vis_utils.vis_keypoints(image_vis, kpts2d[~valid], color='r')
             # resize frame
-            vis_heght = 320
+            vis_heght = 640
             vis_width = int(image_vis.shape[1] * vis_heght / image_vis.shape[0])
             image_vis = cv2.resize(image_vis, (vis_width, vis_heght))
             cv2.imshow('frame', image_vis)
-            cv2.waitKey(15)
+            cv2.waitKey(0)
 
 
 @hydra.main(config_path='configs/', config_name='config.yaml')
@@ -203,7 +205,7 @@ def main(cfg):
             if ret:
                 one_pose_inference.inference(cfg, frame)
                 cv2.imshow('frame', frame)
-                cv2.waitKey(15)
+                cv2.waitKey(0)
 
 
 if __name__ == "__main__":

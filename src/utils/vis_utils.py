@@ -484,3 +484,15 @@ def make_video(image_path, output_video_path):
         video.write(image)
     video.release()
     logger.info(f"Demo vido saved to: {output_video_path}")
+
+
+def vis_keypoints(image, kpts, color='r', radius=3):
+    """ Visualize keypoints """
+    color_dict = {
+        'g': (0, 255, 0),
+        'r': (0, 0, 255),
+        'b': (255, 0, 0)
+    }
+    for kpt in kpts:
+        cv2.circle(image, (int(kpt[0]), int(kpt[1])), radius, color_dict[color], -1)
+    return image
