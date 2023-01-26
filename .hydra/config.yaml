@@ -14,7 +14,7 @@ model:
 network:
   detection: superpoint
   matching: superglue
-object_detect_mode: feature_matching
+object_detect_mode: GT_box
 max_num_kp3d: 2500
 scan_data_dir: /home/robot-learning/Projects/ScenePose/data
 sfm_model_dir: ${data_dir}/sfm_model

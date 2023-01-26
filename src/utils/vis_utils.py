@@ -377,6 +377,43 @@ def vis_reproj(image_full_path, poses, box3d_path, intrin_full_path,
 
     return image_full
 
+
+def vis_reproj_image(image, poses, box3d_path, intrin_full_path, colors=['y', 'g']):
+    """ 
+    Draw 2d box reprojected by 3d box.
+    Yellow for gt pose, and green for pred pose.
+    """
+    def parse_K(intrin_full_path):
+        """ Read intrinsics"""
+        with open(intrin_full_path, 'r') as f:
+            lines = [line.rstrip('\n').split(':')[1] for line in f.readlines()]
+        
+        fx, fy, cx, cy = list(map(float, lines))
+
+        K = np.array([
+            [fx, 0, cx],
+            [0, fy, cy],
+            [0, 0, 1]
+        ])
+        K_homo = np.array([
+            [fx, 0, cx, 0],
+            [0, fy, cy, 0],
+            [0,  0,  1, 0]
+        ])
+        return K, K_homo # [3, 3], [3, 4]
+
+    box3d = np.loadtxt(box3d_path)
+    K_full, _  = parse_K(intrin_full_path)
+
+    for pose, color in zip(poses, colors):
+        # Draw pred 3d box
+        if pose is not None:
+            reproj_box_2d = reproj(K_full, pose, box3d)
+            draw_3d_box(image, reproj_box_2d, color=color)
+
+    return image
+
+
 def save_demo_image(pose_pred, K, image_path, box3d_path, draw_box=True, save_path=None):
     """ 
     Project 3D bbox by predicted pose and visualize
@@ -408,7 +445,7 @@ def dump_wis3d(idx, cfg, data_dir, image0, image1, image_full,
 
     # property for wis3d
     reproj_distance = np.linalg.norm(kpts2d_reproj - kpts2d, axis=1)
-    inliers_bool = np.zeros((kpts2d.shape[0], 1), dtype=np.bool)
+    inliers_bool = np.zeros((kpts2d.shape[0], 1), dtype=bool)
     if inliers is not None:
         inliers_bool[inliers] = True
         num_inliers = len(inliers)
