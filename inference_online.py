@@ -176,7 +176,8 @@ class OnePoseInference:
             image_vis = cv2.resize(image_vis, (vis_width, vis_heght))
             cv2.imshow('frame', image_vis)
             cv2.waitKey(15)
-
+        else:
+            print("Not enough inliers!")
 
 @hydra.main(config_path='configs/', config_name='config.yaml')
 def main(cfg):
@@ -192,7 +193,16 @@ def main(cfg):
     # init one pose inference
     one_pose_inference = OnePoseInference(cfg, sfm_data_dir, sfm_model_dir) 
 
-    vide_mode = "video"  # "video" or "web_camera"
+    if os.path.exists(f"{test_data_dir}/video.MOV"):
+        vide_mode = "video"
+    elif os.path.exists(f"{test_data_dir}/images/1.png"):
+        vide_mode = "images"
+    else:
+        vide_mode = "web_camera"
+    
+    # hard-code
+    vide_mode = "web_camera"
+
     if vide_mode == "video":
         cap = cv2.VideoCapture(f"{test_data_dir}/video.MOV")
         while True:
@@ -205,8 +215,12 @@ def main(cfg):
             ret, frame = cap.read()
             if ret:
                 one_pose_inference.inference(cfg, frame)
-                cv2.imshow('frame', frame)
-                cv2.waitKey(15)
+    elif vide_mode == "images":
+        cap = cv2.VideoCapture(f"{test_data_dir}/images/%d.png")
+        while True:
+            ret, frame = cap.read()
+            if ret:
+                one_pose_inference.inference(cfg, frame)
 
 
 if __name__ == "__main__":

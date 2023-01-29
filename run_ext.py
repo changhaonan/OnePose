@@ -80,6 +80,8 @@ def merge_anno(cfg):
 
 def sfm(cfg):
     """ Reconstruct and postprocess sparse object point cloud, and store point cloud features"""
+    from src.utils import path_utils
+
     data_dirs = cfg.dataset.data_dir
     down_ratio = cfg.sfm.down_ratio
     data_dirs = [data_dirs] if isinstance(data_dirs, str) else data_dirs
@@ -95,6 +97,12 @@ def sfm(cfg):
             seq_dir = osp.join(root_dir, sub_dir)
             img_lists += glob.glob(str(Path(seq_dir)) + '/color/*.png', recursive=True)
             seg_lists += glob.glob(str(Path(seq_dir)) + '/seg/*.png', recursive=True)
+
+        # Filter out images based on the existence of pose file:
+        pose_lists = [path_utils.get_gt_pose_path_by_color(color_path) for color_path in img_lists]
+        img_lists = [img for img, pose in zip(img_lists, pose_lists) if osp.isfile(pose)]
+        seg_lists = [seg for seg, pose in zip(seg_lists, pose_lists) if osp.isfile(pose)]
+
         # Sorted img_lists:
         img_lists = sorted(img_lists, key=lambda x: int(x.split('/')[-1].split('.')[0]))
         seg_lists = sorted(seg_lists, key=lambda x: int(x.split('/')[-1].split('.')[0]))
